@@ -8,14 +8,35 @@ function App() {
  const [students,setStudents]=useState([]);
  const [name,setName]=useState('');
  const [age,setAge]=useState('');
+ const [editIndex,setEditIndex]=useState(null);
 
  const handleSubmit=(event)=>{
    event.preventDefault();
-   setStudents([...students,{name,age}])
-  // console.log(students)
+
+   if(editIndex !==null){
+    const newstudents=[...students];
+    newstudents[editIndex]={name, age}
+    setStudents(newstudents)
+    setEditIndex(null)
+   }else{
+    setStudents([...students,{name, age}])
+   }
    setName('')
    setAge('')
  }
+
+const handleDelete=(index)=>{
+  const newstudents=[...students];
+  newstudents.splice(index,1);
+  setStudents(newstudents);
+}
+
+const handleEdit=(index)=>{
+  setName(students[index].name);
+  setAge(students[index].age);
+  setEditIndex(index);
+
+}
 
   return (
     <>
@@ -34,7 +55,11 @@ function App() {
           <Form.Control type="number" placeholder="Ingrese Edad" value={age} onChange={(e)=>setAge(e.target.value)}/>
       </Form.Group>
         
-        <Button type="submit">Agregar Estudiante</Button>
+        <Button type="submit">
+          {
+            editIndex!==null?'actualizar estudiante':'agregar estudiante'
+          }
+        </Button>
 
       </Form>
     </Col>
@@ -49,6 +74,8 @@ function App() {
                   <Card.Title>Datos Estudiante</Card.Title>
                   <Card.Text>Nombre:{student.name}</Card.Text>
                   <Card.Text>Edad:{student.age}</Card.Text>
+                  <Button variant="danger" onClick={() => handleDelete(index)}> Eliminar</Button>
+                  <Button variant="warning" onClick={() => handleEdit(index)} style={{ marginLeft: '10px' }}>Editar</Button>
                 </Card.Body>
             </Card>
       </Col>
