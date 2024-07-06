@@ -11,9 +11,17 @@ function App() {
   const [date, setDate] = useState('');
   const [isImportant, setIsImportant] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    if (description.trim() === '' || date.trim() === '') {
+      setShowAlert(true);
+      return;
+    }
+
+    setShowAlert(false);
 
     if (editIndex !== null) {
       const newReminders = [...reminders];
@@ -47,6 +55,11 @@ function App() {
       <Container>
         <Row>
           <Col>
+            {showAlert && (
+              <div style={{ color: 'red', marginBottom: '10px' }}>
+                Todos los campos son obligatorios.
+              </div>
+            )}
             <Form onSubmit={handleSubmit}>
               <Form.Group className="mb-3">
                 <Form.Label>Descripción</Form.Label>
